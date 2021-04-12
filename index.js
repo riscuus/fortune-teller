@@ -10,12 +10,16 @@ const JwtStrategy = require('passport-jwt').Strategy
 const sqlite3 = require('sqlite3').verbose()
 const bcrypt = require('bcrypt')
 
+// PORT where the express server will listen to
 const port = 3000
 
 const app = express()
+
+// Middleware that allows us to log each request that arrives to the server
 app.use(logger('dev'))
 
 /* DATABASE SETUP */
+// Create database file or get existing one 
 const db = new sqlite3.Database('database')
 
 // Create users table
@@ -154,21 +158,15 @@ app.use(cookieParser())
 /* ROUTES CONFIGURATION */
 
 // GET / (main route)
-// The user should be authenticated to access to this route
-// If authentication is successful we show a fortune tell
-app.get('/', passport.authenticate('jwt', 
-    {session: false, failureRedirect: '/login'}),
-    (req, res) => {
+// The user should be authenticated to access to this route. If authentication is successful we show a fortune tell
+app.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
         res.send(fortune.fortune());
     }
 )
 
 // GET /user (personal user page)
-// User should be authenticated to access to this route
-// If authentication is successful we show the user username
-app.get('/user', passport.authenticate('jwt', 
-    {session: false, failureRedirect: '/login'}),
-    (req, res) => {
+// User should be authenticated to access to this route. If authentication is successful we show the user username
+app.get('/user', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
         res.send(req.user);
     }
 )
@@ -180,39 +178,37 @@ app.get('/login', (req, res) => {
 })
 
 // POST /login (login page)
-// We authenticate the user in the database
-// If the user didn't exist we create it
-app.post('/login', passport.authenticate('local', 
-    {failureRedirect: '/wrong-login', session: false}), 
-    (req, res) => {
-        console.log("[INFO] Creating the JWT token...")
-        // Data to put inside the JWT 
-        const jwtClaims = {
-            sub: req.user.username,
-            iss: 'localhost:3000',
-            aud: 'localhost:3000',
-            exp: Math.floor(Date.now() / 1000) + 604800, // 1 week
-            // (7x24x60x60 = 604800s)
-            role: 'user'
-        }
-
-        // Generate the signed json web token
-        const token = jwt.sign(jwtClaims, jwtSecret)
-
-        console.log("[INFO] JWT token created and sent succesfuly, " + 
-        "redirecting to fortune page...")
-        // Send the token directly to the browser
-        // WE SET THE VALIDITY FOR 2 MIN
-        // Use the following code instead if we want it valid until end of session
-        //res.cookie('jwt', token, {httpOnly: true})
-        res.cookie('jwt', token, {expires: new Date(Date.now() + 120 * 1000), httpOnly: true})
-        res.redirect('/')
-        
-        console.log(`[INFO] Token sent. Debug at https://jwt.io/?value=${token}`)
-        console.log(`[INFO] Token secret (for verifying the signature): ${jwtSecret.toString('base64')}`)
+// We authenticate the user in the database. If the user didn't exist we create it
+app.post('/login', passport.authenticate('local', {failureRedirect: '/wrong-login', session: false}), (req, res) => {
+    console.log("[INFO] Creating the JWT token...")
+    // Data to put inside the JWT 
+    const jwtClaims = {
+        sub: req.user.username,
+        iss: 'localhost:3000',
+        aud: 'localhost:3000',
+        exp: Math.floor(Date.now() / 1000) + 604800, // 1 week
+        // (7x24x60x60 = 604800s)
+        role: 'user'
     }
-)
 
+    // Generate the signed json web token
+    const token = jwt.sign(jwtClaims, jwtSecret)
+
+    console.log("[INFO] JWT token created and sent succesfuly, " + 
+    "redirecting to fortune page...")
+    // Send the token directly to the browser
+    // WE SET THE VALIDITY FOR 2 MIN
+    // Use the following code instead if we want it valid until end of session
+    //res.cookie('jwt', token, {httpOnly: true})
+    res.cookie('jwt', token, {expires: new Date(Date.now() + 120 * 1000), httpOnly: true})
+    res.redirect('/')
+    
+    console.log(`[INFO] Token sent. Debug at https://jwt.io/?value=${token}`)
+    console.log(`[INFO] Token secret (for verifying the signature): ${jwtSecret.toString('base64')}`)
+})
+
+// GET /wrong-login
+// We send the user to this page when it has introduced an invalid username or password
 app.get('/wrong-login', (req, res) =>{
     res.sendFile('wrong-login.html', {root: __dirname})
 })
