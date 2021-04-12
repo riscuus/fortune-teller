@@ -11,12 +11,12 @@ The server runs on ``localhost:3000``
 
 Currently there are implemented 6 routes:
 
-``GET \`` Main route. User must be logged (JWT strategy). Shows fortune telling
-``GET \login`` The login page. User can fill a form with username and password
-``POST \login`` Post of the login page. The user credentials are sent a local strategy is followed to check authenticate the user.
-``GET \logout`` If the user is logged the express app clears the cookie so the user get logged out.
-``GET \user`` If the user is logged (JWT strategy) returns the username.
-``GET \wrong-login`` If the user sends a wrong username or password the user is redirected to this page where is informed about his error. Has a link to return to the login page.
+1. ``GET \`` Main route. User must be logged (JWT strategy). Shows fortune telling
+2. ``GET \login`` The login page. User can fill a form with username and password
+3. ``POST \login`` Post of the login page. The user credentials are sent a local strategy is followed to check authenticate the user.
+4. ``GET \logout`` If the user is logged the express app clears the cookie so the user get logged out.
+5. ``GET \user`` If the user is logged (JWT strategy) returns the username.
+6. ``GET \wrong-login`` If the user sends a wrong username or password the user is redirected to this page where is informed about his error. Has a link to return to the login page.
 
 ## 3. Users
 
