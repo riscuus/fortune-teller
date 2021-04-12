@@ -1,0 +1,39 @@
+# Fortune teller
+___
+
+## 1 Introduction
+
+This is an express-app that uses JWT inside a cookie to mantain a user logged
+
+## 2. API
+
+The server runs on ``localhost:3000``
+
+Currently there are implemented 6 routes:
+
+``GET \`` Main route. User must be logged (JWT strategy). Shows fortune telling
+``GET \login`` The login page. User can fill a form with username and password
+``POST \login`` Post of the login page. The user credentials are sent a local strategy is followed to check authenticate the user.
+``GET \logout`` If the user is logged the express app clears the cookie so the user get logged out.
+``GET \user`` If the user is logged (JWT strategy) returns the username.
+``GET \wrong-login`` If the user sends a wrong username or password the user is redirected to this page where is informed about his error. Has a link to return to the login page.
+
+## 3. Users
+
+Currently in the database are saved ``1`` user with credentials:
+
+```
+username: walrus
+password: walrus
+```
+Note that more users could be easily added just repeating the process we use to add the user to the database. It would also easy to implement the logic to add users using a sign-up page.
+
+## 4. Usage
+
+This express app can be launched using ``node index.js``. After that it is just needed to open a web tab on ``localhost:3000``
+
+It uses Sqlite3 to store the users and passport middleware for the management of the user authentication
+
+## 5. Contact
+
+Project created by Albert Risco (MET Student) albert.risco@estudiantat.upc.edu
