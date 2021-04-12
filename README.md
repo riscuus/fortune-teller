@@ -3,7 +3,7 @@ ___
 
 ## 1 Introduction
 
-This is an express-app that uses JWT inside a cookie to mantain a user logged
+This is an express-app that uses JWT inside a cookie to mantain a user logged.  It uses Sqlite3 to store the users and passport middleware for the management of the user authentication
 
 ## 2. API
 
@@ -30,9 +30,10 @@ Note that more users could be easily added just repeating the process we use to 
 
 ## 4. Usage
 
-This express app can be launched using ``node index.js``. After that it is just needed to open a web tab on ``localhost:3000``
-
-It uses Sqlite3 to store the users and passport middleware for the management of the user authentication
+1. Open a terminal in project root folder
+2. run ``npm install`` to install project dependencies
+3. Launch the app using ``node index.js``
+4. Open a web browser tab on ``localhost:3000``
 
 ## 5. Contact
 
